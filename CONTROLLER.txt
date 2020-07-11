@@ -1,0 +1,108 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using System.Web.Mvc;
+using System.Data;
+using System.Data.SqlClient;
+using System.Configuration;
+using Newtonsoft.Json;
+using mvcnotmodel160620.Controllers;
+
+namespace mvcnotmodel160620.Controllers
+{
+    public class EmpController : Controller
+    {
+        SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["DBCS"].ConnectionString);
+        public ActionResult Insert()
+        {
+            return View();
+        }
+        public void InsertData(string A, int B, int C, string D)
+        {
+            con.Open();
+            SqlCommand cmd = new SqlCommand("usp_tblEmp", con);
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.AddWithValue("@action", "insert");
+            cmd.Parameters.AddWithValue("@name", A);
+            cmd.Parameters.AddWithValue("@age", B);
+            cmd.Parameters.AddWithValue("@ctr", C);
+            cmd.Parameters.AddWithValue("@dob", D);
+            cmd.ExecuteNonQuery();
+            con.Close();
+        }
+        public ActionResult Country()
+        {
+            string data = "";
+            con.Open();
+            SqlCommand cmd = new SqlCommand("usp_tblEmp", con);
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.AddWithValue("@action", "bindcon");
+            SqlDataAdapter da = new SqlDataAdapter(cmd);
+            DataTable dt = new DataTable();
+            da.Fill(dt);
+            con.Close();
+
+            data = JsonConvert.SerializeObject(dt);
+            return Json(data, JsonRequestBehavior.AllowGet);
+        }
+        public ActionResult Show()
+        {
+            string data = "";
+            con.Open();
+            SqlCommand cmd = new SqlCommand("usp_tblEmp", con);
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.AddWithValue("@action", "join");
+            SqlDataAdapter da = new SqlDataAdapter(cmd);
+            DataTable dt = new DataTable();
+            da.Fill(dt);
+            con.Close();
+
+            data = JsonConvert.SerializeObject(dt);
+            return Json(data, JsonRequestBehavior.AllowGet);
+        }
+        public void Delete(int A)
+        {
+            con.Open();
+            SqlCommand cmd = new SqlCommand("usp_tblEmp", con);
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.AddWithValue("@action", "delete");
+            cmd.Parameters.AddWithValue("@id", A);
+            cmd.ExecuteNonQuery();
+            con.Close();
+
+        }
+        public ActionResult Edit(int A)
+        {
+            string data = "";
+            con.Open();
+            SqlCommand cmd = new SqlCommand("usp_tblEmp", con);
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.AddWithValue("@action", "edit");
+            cmd.Parameters.AddWithValue("@id", A);
+            SqlDataAdapter da = new SqlDataAdapter(cmd);
+            DataTable dt = new DataTable();
+            da.Fill(dt);
+            con.Close();
+
+            data = JsonConvert.SerializeObject(dt);
+            return Json(data, JsonRequestBehavior.AllowGet);
+        }
+
+        public void Update(int X, string A, int B, int C, string D)
+        {
+            con.Open();
+            SqlCommand cmd = new SqlCommand("usp_tblEmp", con);
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.AddWithValue("@action", "update");
+            cmd.Parameters.AddWithValue("@id", X);
+            cmd.Parameters.AddWithValue("@name", A);
+            cmd.Parameters.AddWithValue("@age", B);
+            cmd.Parameters.AddWithValue("@ctr", C);
+            cmd.Parameters.AddWithValue("@dob", D);
+            cmd.ExecuteNonQuery();
+            con.Close();
+
+        }
+    }
+}

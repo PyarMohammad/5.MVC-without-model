@@ -1,0 +1,101 @@
+$(document).ready(function () {
+    Show();
+    CountryData();
+});
+
+var IID = 0;
+
+function SaveData() {
+    if ($("#btnsave").val() == "SAVE") {
+        $.ajax({
+            url: 'Emp/InsertData',
+            data: { A: $("#txtname").val(), B: $("#txtage").val(), C: $("#ddlcountry").val(), D: $("#txtdob").val()  },
+            success: function () {
+                Show();
+            },
+            error: function () {
+                alert("Data not insert");
+            }
+        });
+    }
+    else {
+        $.ajax({
+            url: 'Emp/Update',
+            data: { X: IID, A: $("#txtname").val(), B: $("#txtage").val(), C: $("#ddlcountry").val(), D: $("#txtdob").val() },
+            success: function () {
+                Show();
+            },
+            error: function () {
+                alert("Data not updated!");
+            }
+        });
+    }
+}
+
+function CountryData() {
+    $.ajax({
+        url: 'Emp/Country',
+        data: {},
+        success: function (data) {
+            data = JSON.parse(data);
+            for (var i = 0; i < data.length; i++) {
+                $("#ddlcountry").append($('<option/>').attr("value", data[i].cid).text(data[i].cname));
+            }
+        },
+        error: function () {
+            alert("Country not choose!");
+        }
+    });
+}
+
+function Show() {
+    $.ajax({
+        url: 'Emp/Show',
+        data: {},
+        success: function (data) {
+            data = JSON.parse(data);
+            $("#tbl").find('tr:gt(0)').remove();
+            for (var i = 0; i < data.length; i++) {
+                $("#tbl").append('<tr> <td>' + data[i].name + '</td> <td>' + data[i].age + ' </td> <td>' + data[i].cname + ' </td>  <td>' + data[i].idob + ' </td> <td>' + data[i].status + ' </td> <td><input type="button" id="btndelete" value="DELETE" onclick= "DeleteData(' + data[i].id + ')" /></td>  <td><input type="button" id="btnedit" value="Edit" onclick= "EditData(' + data[i].id + ')" />  </td> <tr>');
+            }
+        },
+        error: function () {
+            alert("Data not show!");
+        }
+    });
+}
+
+function DeleteData(id) {
+    $.ajax({
+        url: 'Emp/Delete',
+        data: { A: id },
+        success: function () {
+            Show();
+        },
+        error: function () {
+            alert("Data not delete!");
+        }
+    });
+}
+
+function EditData(id) {
+    $.ajax({
+        url: 'Emp/Edit',
+        data: { A: id },
+        success: function (data) {
+            data = JSON.parse(data);
+            for (var i = 0; i < data.length; i++) {
+                $("#txtname").val(data[0].name);
+                $("#txtage").val(data[0].age);
+                $("#ddlcountry").val(data[0].ctr);
+                $("#txtdob").val(data[0].dob);
+                $("#btnsave").val("UPDATE");
+                IID = id;
+            }
+        },
+        error: function () {
+            alert("Data not edit!");
+        }
+    });
+}
+

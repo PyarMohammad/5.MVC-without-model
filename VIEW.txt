@@ -1,0 +1,63 @@
+
+@{
+    ViewBag.Title = "Insert";
+}
+
+<h2>Insert</h2>
+
+<script src="~/jquery.min.js"></script>
+<script src="~/Employee.js"></script>
+
+
+<table>
+    <tr>
+        <td>Name :</td>
+        <td>
+            <input type="text" id="txtname" />
+        </td>
+    </tr>
+    <tr>
+        <td>Age :</td>
+        <td>
+            <input type="text" id="txtage" />
+        </td>
+    </tr>
+    <tr>
+        <td>Country :</td>
+        <td>
+            <select id="ddlcountry">
+                <option value="0">--SELECT--</option>
+            </select>
+        </td>
+    </tr>
+    <tr>
+        <td>DOB :</td>
+        <td>
+            <input type="date" id="txtdob" />
+        </td>
+    </tr>
+    <tr>
+        <td></td>
+        <td>
+            <input type="button" id="btnsave" value="SAVE" onclick="SaveData()" />
+        </td>
+    </tr>
+</table>
+
+
+<table id="tbl" border="1" style="background-color:blue; color:red">
+    <tr style="background-color:black">
+        <td>Name </td>
+        <td>Age </td>
+        <td>Country </td>
+        <td>DOB </td>
+        <td>DELETE </td>
+        <td>Edit </td>
+    </tr>
+</table>
+
+
+
+
+
+
